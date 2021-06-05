@@ -1,0 +1,120 @@
+---
+title: 'Graduates'
+author: "Kimutai"
+date: "6/2/2021"
+output: 
+  bookdown::html_document2:
+    css: grad_stylesheets.css
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      message = F, 
+                      out.width = "95%")
+```
+
+# This data is based off the article from 538 data [Guide to picking a college major](https://fivethirtyeight.com/features/the-economic-guide-to-picking-a-college-major/).
+
+```{r}
+
+library("tidyverse")
+library("scales")
+
+#Loading a custom theme.
+theme_set(theme(panel.background = element_rect("#cef9f7"),
+                plot.background =  element_rect("#e7f9f8"),
+                panel.grid.major.y = element_line("#9291b8"),
+                legend.background = element_rect("#e7f9f8"),
+                legend.position = "bottom" ))
+#Reading in the data set.
+graduates <- read_csv("recent_grads.csv")
+```
+## The top earning major earn within a range of the following.
+
+STEM degree majors tend to earn more than their humanities and arts counterparts.  
+However the humanities and arts are more populous than STEM counterparts.
+
+
+
+
+```{r}
+graduates %>% 
+  arrange(desc(median)) %>% 
+  select(major_category, median, major, p25th, p75th) %>% 
+  head(20) %>% 
+  mutate(major = str_to_title(major), 
+         major = fct_reorder(major, median)) %>% 
+  ggplot(aes(x = median, y = major, col = major_category)) +
+  geom_point() +
+  geom_errorbar(aes(xmin = p25th, xmax = p75th)) +
+  expand_limits(x = 0) +
+  labs(title = "Earning ranges of top earning degrees",
+       x = "Earnings ranges", y = NULL) + 
+  scale_x_continuous(labels = dollar) +
+  guides(color = guide_legend(nrow = 2))
+```
+
+## A breakdown of the most populous degree in terms of the gender totals.
+
+
+
+```{r}
+graduates %>% 
+  filter(!is.na(total)) %>% 
+  arrange(desc(total)) %>% 
+  head(20) %>% 
+  mutate(major = fct_reorder(major, total)) %>% 
+  pivot_longer(men:women, 
+               names_to = "gender", 
+               values_to = "number")%>% 
+  ggplot(aes(x = major,y = number, fill = gender)) +
+  geom_col(position = "dodge") +
+  scale_y_continuous(labels = comma) +
+  expand_limits(y = 0, x = 0) +
+  coord_flip() +
+  labs(x = NULL)
+  
+```
+
+
+
+## Major categories breakdown in terms of the gender.
+
+
+```{r}
+graduates %>% 
+  filter(!is.na(total)) %>% 
+    pivot_longer(cols = c(men, women), 
+                           names_to = "gender", 
+                           values_to = "number") %>% 
+  group_by(major_category, gender) %>% 
+  summarize(n = sum(number)) %>% 
+  filter(!is.na(n)) %>% 
+  ggplot(aes(x = fct_reorder(major_category, n),
+             y = n, fill = gender)) +
+  geom_col(position = "dodge") +
+  coord_flip() +
+  theme(panel.background = element_rect("#cef9f7"),
+        plot.background =  element_rect("#e7f9f8"),
+        panel.grid.major.y = element_line("#9291b8")) +
+  scale_y_continuous(labels = comma) +
+  #scale_fill_manual(values = c(women = "#E54F5F",men = "#214490")) +
+  labs(title = "Men & Women in Various Disciplines",
+       x = NULL,
+       y = "No. of people")
+       
+```
+
+
+
+
+
+
+
+
+
+
+
+
