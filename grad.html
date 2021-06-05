@@ -385,7 +385,9 @@ graduates &lt;- read_csv(&quot;recent_grads.csv&quot;)</code></pre>
 <div id="the-top-earning-major-earn-within-a-range-of-the-following." class="section level2" number="1.1">
 <h2><span class="header-section-number">1.1</span> The top earning major earn within a range of the following.</h2>
 <p>STEM degree majors tend to earn more than their humanities and arts counterparts.<br />
-However the humanities and arts are more populous than STEM counterparts.</p>
+However the humanities and arts are more populous than STEM counterparts.<br />
+A college degree is no guarantee of economic success but the choice of a major can boost the odds.<br />
+Top earning majors are as follows.</p>
 <pre class="r"><code>graduates %&gt;% 
   arrange(desc(median)) %&gt;% 
   select(major_category, median, major, p25th, p75th) %&gt;% 

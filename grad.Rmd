@@ -34,7 +34,9 @@ graduates <- read_csv("recent_grads.csv")
 ## The top earning major earn within a range of the following.
 
 STEM degree majors tend to earn more than their humanities and arts counterparts.  
-However the humanities and arts are more populous than STEM counterparts.
+However the humanities and arts are more populous than STEM counterparts.  
+A college degree is no guarantee of economic success but the choice of a major can boost the odds.  
+Top earning majors are as follows.
 
 
 
@@ -56,7 +58,7 @@ graduates %>%
   guides(color = guide_legend(nrow = 2))
 ```
 
-## A breakdown of the most populous degree in terms of the gender totals.
+## A breakdown of the most populous degree in terms of the gender totals. 
 
 
 
